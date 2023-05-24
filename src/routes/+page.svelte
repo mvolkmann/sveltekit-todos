@@ -80,6 +80,11 @@
     margin-top: 0;
   }
 
+  :global(input) {
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+  }
+
   ul {
     list-style: none; /* removes bullets */
     margin-left: 0;
