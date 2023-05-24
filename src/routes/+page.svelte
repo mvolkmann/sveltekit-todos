@@ -1,8 +1,7 @@
-<script>
+<script lang="ts">
   import Todo from '../components/Todo.svelte';
 
   export let data;
-  console.log('+page.svelte data:  =', data);
   let todos = data.todos;
 
   let lastId = 0;
@@ -28,7 +27,17 @@
   const archiveCompleted = () => (todos = todos.filter((t) => !t.done));
 
   // This deletes the todo with a given id.
-  const deleteTodo = (todoId) => (todos = todos.filter((t) => t.id !== todoId));
+  async function deleteTodo(todoId: number) {
+    try {
+      const url = '/?id=' + todoId;
+      console.log('+page.svelte deleteTodo: url =', url);
+      const res = await fetch(url, { method: 'DELETE' });
+      console.log('+page.svelte deleteTodo: res =', res);
+      if (!res.ok) throw new Error(await res.text());
+    } catch (e) {
+      console.log('+page.svelte deleteTodo: e =', e);
+    }
+  }
 
   function toggleDone(todo) {
     const { id } = todo;
@@ -42,22 +51,22 @@
     {status}
     <button on:click={archiveCompleted}>Archive Completed</button>
   </div>
-  <!-- Using a form makes it so pressing the return key
-       while in the input activates the Add button,
-       calling the addTodo function.
-       But we don't want to POST the form data.
-       The preventDefault modifier prevents that. -->
   <form method="POST">
-    <input size="30" placeholder="enter new todo here" bind:value={todoText} />
-    <!-- The Add button is disabled if no text
-         has been entered in the input. -->
+    <input
+      name="text"
+      placeholder="enter new todo here"
+      size="30"
+      bind:value={todoText}
+    />
     <button disabled={!todoText}>Add</button>
   </form>
   <ul>
     {#each todos as todo}
-      <!-- We listen for delete and toggleDone events here. -->
-      <!-- Note the use of shorthand syntax for passing a prop. -->
-      <Todo {todo} on:delete={() => deleteTodo(todo.id)} on:toggleDone={() => toggleDone(todo)} />
+      <Todo
+        {todo}
+        on:delete={() => deleteTodo(todo.id)}
+        on:toggleDone={() => toggleDone(todo)}
+      />
     {/each}
   </ul>
 </div>
