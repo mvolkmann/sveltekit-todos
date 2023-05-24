@@ -59,6 +59,7 @@
   button {
     background: transparent;
     border: none;
+    font-size: 1rem;
     margin-left: 0.5rem;
     padding: 0;
   }
@@ -90,6 +91,6 @@
   }
 
   input[type='checkbox'] {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
   }
 </style>
